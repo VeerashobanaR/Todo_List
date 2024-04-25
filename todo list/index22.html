@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <style>
+body {
+  background-image: url('https://as2.ftcdn.net/v2/jpg/04/78/52/99/1000_F_478529988_on7fFrEpM5Ro6eecAir1C8aP4xahmbzo.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+            .logout-btn {
+            position: absolute;
+            top: 200px;
+            right: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin-left: 10px;
+        }
+        .container {
+      width: 300px;
+      margin: 0 auto;
+      margin-top: 250px;
+      text-align:space-between;
+      padding: 30px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+   
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+ .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+   
+    </style>
+</head>
+<body>
+    <div class="container">
+    <center>
+    <h1 style="color:black;">To-Do List</h1>
+    <h3><b>Enter a new task</b></h3>
+    <input type="text" id="taskInput" placeholder="Enter a new task"><br><br>
+    <h3><b>Due date</b></h3>
+    <input type="date" id="dueDateInput"><br><br>
+    <h3><b>Due time</b></h3>
+    <input type="time" id="dueTimeInput"><br><br>
+    <button onclick="addTask()">Add Task</button>
+<button class="logout-btn" onclick="logout()">Logout</button>
+    <ul id="taskList"></ul></center>
+    </div>
+
+    <script>
+
+
+        function addTask() {
+            var input = document.getElementById("taskInput");
+            var task = input.value;
+            var dueDate = document.getElementById("dueDateInput").value;
+            var dueTime = document.getElementById("dueTimeInput").value;
+
+            if (task !== "") {
+                var li = document.createElement("li");
+                li.textContent = task;
+
+                var span = document.createElement("span");
+                span.textContent = "Due Date: " + dueDate + " " + "Due Time: " + dueTime;
+
+                var deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.onclick = function() {
+                    this.parentNode.remove();
+                };
+
+                li.appendChild(span);
+                li.appendChild(deleteButton);
+
+                document.getElementById("taskList").appendChild(li);
+                input.value = "";
+                document.getElementById("dueDateInput").value = "";
+                document.getElementById("dueTimeInput").value = "";
+            }
+        }
+ function logout() {
+              window.location.href = "login.html";
+           }
+   
+
+        setInterval(checkDueDates, 1000); // Check every second
+
+        function checkDueDates() {
+            var tasks = document.querySelectorAll("#taskList li");
+
+            tasks.forEach(function(task) {
+                var span = task.querySelector("span");
+                var dueDateString = span.textContent.match(/Due Date: (.+) Due Time: (.+)/);
+                var dueDate = new Date(dueDateString[1] + " " + dueDateString[2]);
+
+                if (dueDate <= new Date()) {
+                    task.classList.add("completed");
+                    task.querySelector("button").disabled = true;
+                    alert("Task '" + task.textContent + "'   is due now!");
+                }
+            });
+        }
+setInterval(checkDueDates, 1000); // Check every second
+
+    function checkDueDates() {
+        var tasks = document.querySelectorAll("#taskList li");
+
+        tasks.forEach(function(task) {
+            var span = task.querySelector("span");
+            var dueDateString = span.textContent.match(/Due Date: (.+) Due Time: (.+)/);
+            var dueDate = new Date(dueDateString[1] + " " + dueDateString[2]);
+
+            if (dueDate <= new Date()) {
+                task.classList.add("completed");
+                task.querySelector("button").disabled = true;
+
+                var result = confirm("Task '" + task.textContent + "' is due now!\nDo you want to remove it?");
+                if (result) {
+                    task.remove();
+                }
+            }
+        });
+    }
+    </script>
+</body>
+</html>
